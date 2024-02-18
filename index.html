@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastgele Anlamsız Resim Oluşturucu</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        #canvas {
+            border: 1px solid black;
+            margin: 20px auto;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
+    <button onclick="downloadImage()">Resmi İndir</button>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function generateRandomImage() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
+            const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
+
+            for (let i = 0; i < numShapes; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 50 + 20; // Rastgele 20 ila 70 arasında boyut
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+                ctx.fillStyle = color;
+
+                switch (shape) {
+                    case 'circle':
+                        ctx.beginPath();
+                        ctx.arc(x, y, size, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                    case 'square':
+                        ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                        break;
+                    case 'triangle':
+                        ctx.beginPath();
+                        ctx.moveTo(x, y - size / 2);
+                        ctx.lineTo(x + size / 2, y + size / 2);
+                        ctx.lineTo(x - size / 2, y + size / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                        break;
+                }
+            }
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'random_image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
