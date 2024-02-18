@@ -35,6 +35,7 @@
     </select><br>
     <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
+    <button onclick="toggleMusic()">Müziği Aç/Kapat</button>
     <button onclick="downloadImage()">Resmi İndir</button>
 
     <script>
@@ -44,6 +45,7 @@
         const backgroundCheckbox = document.getElementById('background-color');
         const complexityCheckbox = document.getElementById('complexity');
         let isBlackBackground = false;
+        let isMusicPlaying = false; // Müziğin çalınıp çalmadığını kontrol et
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -113,15 +115,17 @@
                 }
             }
 
-            // Arka plan rengi siyahsa space.mp3 oynat
-            if (isBlackBackground) {
+            // Arka plan rengi siyahsa ve müzik çalmıyorsa müziği başlat
+            if (isBlackBackground && !isMusicPlaying) {
                 const audio = new Audio('space.mp3');
                 audio.loop = true;
                 audio.play();
-            } else {
+                isMusicPlaying = true;
+            } else if (!isBlackBackground && isMusicPlaying) { // Arka plan rengi siyah değilse ve müzik çalıyorsa müziği durdur
                 const audio = document.querySelector('audio');
                 if (audio) {
                     audio.pause();
+                    isMusicPlaying = false;
                 }
             }
 
@@ -131,6 +135,22 @@
                 body.style.backgroundSize = "cover";
             } else {
                 body.style.background = "#ffffff";
+            }
+        }
+
+        // Müziği aç/kapat
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                const audio = document.querySelector('audio');
+                if (audio) {
+                    audio.pause();
+                    isMusicPlaying = false;
+                }
+            } else {
+                const audio = new Audio('space.mp3');
+                audio.loop = true;
+                audio.play();
+                isMusicPlaying = true;
             }
         }
 
