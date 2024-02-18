@@ -6,6 +6,7 @@
     <title>Rastgele Anlamsız Resim Oluşturucu</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             text-align: center;
         }
@@ -14,15 +15,25 @@
             margin: 20px auto;
         }
         button {
-            margin-top: 10px;
+            margin: 10px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
         }
+        label {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="400" height="400"></canvas>
+    <canvas id="canvas" width="400" height="400"></canvas><br>
+    <label for="background-color">Arka Plan Rengi:</label>
+    <input type="color" id="background-color" value="#f0f0f0"><br>
+    <label for="shape-fill">Şekil Dolgusu:</label>
+    <select id="shape-fill">
+        <option value="solid">Dolu</option>
+        <option value="empty">Boş</option>
+    </select><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
     <button onclick="downloadImage()">Resmi İndir</button>
 
@@ -32,10 +43,14 @@
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bgColor = document.getElementById('background-color').value;
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
             const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
+            const shapeFill = document.getElementById('shape-fill').value; // Dolu veya boş şekiller
 
             for (let i = 0; i < numShapes; i++) {
                 const x = Math.random() * canvas.width;
@@ -50,10 +65,18 @@
                     case 'circle':
                         ctx.beginPath();
                         ctx.arc(x, y, size, 0, Math.PI * 2);
-                        ctx.fill();
+                        if (shapeFill === 'solid') {
+                            ctx.fill();
+                        } else {
+                            ctx.stroke();
+                        }
                         break;
                     case 'square':
-                        ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                        if (shapeFill === 'solid') {
+                            ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                        } else {
+                            ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+                        }
                         break;
                     case 'triangle':
                         ctx.beginPath();
@@ -61,7 +84,11 @@
                         ctx.lineTo(x + size / 2, y + size / 2);
                         ctx.lineTo(x - size / 2, y + size / 2);
                         ctx.closePath();
-                        ctx.fill();
+                        if (shapeFill === 'solid') {
+                            ctx.fill();
+                        } else {
+                            ctx.stroke();
+                        }
                         break;
                 }
             }
