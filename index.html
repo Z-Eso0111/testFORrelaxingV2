@@ -120,7 +120,7 @@
                 isMusicPlaying = true;
             } else if (bgColor !== '#000000' && isMusicPlaying) { // Arka plan rengi siyah değilse ve müzik çalıyorsa müziği durdur
                 const audio = document.querySelector('audio');
-                if (audio) {
+                if (audio && !audio.paused) {
                     audio.pause();
                     isMusicPlaying = false;
                 }
