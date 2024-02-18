@@ -3,75 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rastgele Reisim Oluşturucu</title>
+    <title>Rastgele Resim Oluşturucu</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            background-color: #f3f3f3;
+            background-color: #f0f0f0;
         }
-        .container {
-            text-align: center;
-        }
-        h1 {
-            color: #333;
+        canvas {
+            border: 1px solid #ccc;
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
+            margin-top: 10px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        p {
-            margin-top: 20px;
-            color: #555;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Rastgele Reisim Oluşturucu</h1>
-        <button id="generateButton">Reisim Oluştur</button>
-        <p id="destination"></p>
-    </div>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <button id="downloadBtn">Resmi İndir</button>
 
     <script>
-        // Destinasyonlar
-        const destinasyonlar = [
-            "Paris, Fransa",
-            "Roma, İtalya",
-            "Londra, İngiltere",
-            "New York, ABD",
-            "Tokyo, Japonya",
-            "Rio de Janeiro, Brezilya",
-            "İstanbul, Türkiye",
-            "Barcelona, İspanya",
-            "Sidney, Avustralya",
-            "Dubai, Birleşik Arap Emirlikleri"
-        ];
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const downloadBtn = document.getElementById('downloadBtn');
 
-        // Rastgele destinasyon oluşturma fonksiyonu
-        function rastgeleDestinasyon() {
-            return destinasyonlar[Math.floor(Math.random() * destinasyonlar.length)];
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
         }
 
-        // Butona tıklandığında yeni reisim oluştur
-        document.getElementById("generateButton").addEventListener("click", function() {
-            const destination = rastgeleDestinasyon();
-            document.getElementById("destination").textContent = `Gitmeniz gereken yer: ${destination}`;
-        });
+        function randomColor() {
+            return `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+        }
+
+        function drawRandomShape() {
+            const x = randomInt(0, canvas.width);
+            const y = randomInt(0, canvas.height);
+            const size = randomInt(10, 100);
+            const color = randomColor();
+            ctx.fillStyle = color;
+
+            const shapeType = randomInt(1, 3); // 1: rectangle, 2: circle, 3: triangle
+
+            switch (shapeType) {
+                case 1: // rectangle
+                    ctx.fillRect(x, y, size, size);
+                    break;
+                case 2: // circle
+                    ctx.beginPath();
+                    ctx.arc(x, y, size / 2, 0, 2 * Math.PI);
+                    ctx.fill();
+                    break;
+                case 3: // triangle
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + size, y);
+                    ctx.lineTo(x + size / 2, y + size);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+            }
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function generateRandomImage() {
+            clearCanvas();
+            const numShapes = randomInt(5, 20);
+            for (let i = 0; i < numShapes; i++) {
+                drawRandomShape();
+            }
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'random_image.png';
+            link.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            link.click();
+        }
+
+        generateRandomImage();
+
+        downloadBtn.addEventListener('click', downloadImage);
     </script>
 </body>
 </html>
