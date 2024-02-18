@@ -160,9 +160,9 @@
             }
         }
 
-        // CTRL + F3 + V tuşlarına basıldığında tetiklenecek fonksiyon
+        // F10 tuşuna basıldığında tetiklenecek fonksiyon
         window.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.key === 'F3' && event.code === 'KeyV') {
+            if (event.key === 'F10') {
                 const answer = prompt("Soruyu yanıtlayın:");
                 if (answer === "--. .. --.. .-.. .. / -.- --- -.. / --. .. .-. .. -. .. --..") {
                     const redirect = confirm("Doğru cevap! Şimdi YouTube'a yönlendirileceksiniz. Devam etmek istiyor musunuz?");
