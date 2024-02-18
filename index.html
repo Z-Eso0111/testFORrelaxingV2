@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             text-align: center;
         }
         #canvas {
@@ -42,8 +41,8 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const complexityCheckbox = document.getElementById('complexity-checkbox');
-        const spaceSound = new Audio('space.mp3');
+        const backgroundSound = new Audio('space.mp3');
+        backgroundSound.loop = true;
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -51,10 +50,20 @@
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            if (bgColor === '#000000') {
+                backgroundSound.play();
+                document.body.style.backgroundImage = "url('space.jpg')";
+            } else {
+                backgroundSound.pause();
+                backgroundSound.currentTime = 0;
+                document.body.style.backgroundImage = "none";
+            }
+
             const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
             const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
             const shapeFill = document.getElementById('shape-fill').value; // Dolu veya boş şekiller
+            const complexityChecked = document.getElementById('complexity-checkbox').checked;
 
             for (let i = 0; i < numShapes; i++) {
                 const x = Math.random() * canvas.width;
@@ -96,16 +105,14 @@
                         break;
                 }
 
-                if (complexityCheckbox.checked) {
-                    const startX = Math.random() * canvas.width;
-                    const startY = Math.random() * canvas.height;
-                    const endX = Math.random() * canvas.width;
-                    const endY = Math.random() * canvas.height;
-                    const lineColor = colors[Math.floor(Math.random() * colors.length)];
+                if (complexityChecked && i > 0) {
+                    const prevX = Math.random() * canvas.width;
+                    const prevY = Math.random() * canvas.height;
+                    const prevColor = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.strokeStyle = prevColor;
                     ctx.beginPath();
-                    ctx.moveTo(startX, startY);
-                    ctx.lineTo(endX, endY);
-                    ctx.strokeStyle = lineColor;
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(x, y);
                     ctx.stroke();
                 }
             }
@@ -117,16 +124,6 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
-
-        // Space sesini loop olarak çal
-        canvas.addEventListener('mouseenter', function() {
-            spaceSound.loop = true;
-            spaceSound.play();
-        });
-
-        canvas.addEventListener('mouseleave', function() {
-            spaceSound.pause();
-        });
     </script>
 </body>
 </html>
