@@ -125,6 +125,14 @@
                     isMusicPlaying = false;
                 }
             }
+
+            // Site arka planını ayarla
+            if (bgColor === '#000000') {
+                body.style.backgroundImage = "url('space.jpg')";
+                body.style.backgroundSize = "cover";
+            } else {
+                body.style.background = "#ffffff";
+            }
         }
 
         function downloadImage() {
