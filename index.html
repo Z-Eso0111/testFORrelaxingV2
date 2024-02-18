@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Meaningless Image Generator</title>
+    <title>Rastgele Anlamsız Resim Oluşturucu</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,7 +46,7 @@
     <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
     <button onclick="downloadImage()">Resmi İndir</button>
-    <button id="stop-music" onclick="stopMusic()">M</button>
+    <button id="stop-music" onclick="stopMusic()">Müziği Durdur</button>
 
     <script>
         const canvas = document.getElementById('canvas');
@@ -159,6 +159,19 @@
                 isMusicPlaying = false;
             }
         }
+
+        // CTRL + F3 + V tuşlarına basıldığında tetiklenecek fonksiyon
+        window.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'F3' && event.code === 'KeyV') {
+                const answer = prompt("Soruyu yanıtlayın:");
+                if (answer === "--. .. --.. .-.. .. / -.- --- -.. / --. .. .-. .. -. .. --..") {
+                    const redirect = confirm("Doğru cevap! Şimdi YouTube'a yönlendirileceksiniz. Devam etmek istiyor musunuz?");
+                    if (redirect) {
+                        window.location.href = 'https://youtu.be/q4S82MSMaBI';
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
