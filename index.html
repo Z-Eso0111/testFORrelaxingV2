@@ -34,12 +34,17 @@
         <option value="solid">Dolu</option>
         <option value="empty">Boş</option>
     </select><br>
+    <input type="checkbox" id="complexity-checkbox">
+    <label for="complexity-checkbox">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
     <button onclick="downloadImage()">Resmi İndir</button>
+
+    <audio id="bg-music" src="space.mp3" loop></audio>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const bgMusic = document.getElementById('bg-music');
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -47,10 +52,17 @@
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            if (bgColor === '#000000') {
+                bgMusic.play();
+            } else {
+                bgMusic.pause();
+            }
+
             const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
             const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
             const shapeFill = document.getElementById('shape-fill').value; // Dolu veya boş şekiller
+            const complexityCheckbox = document.getElementById('complexity-checkbox').checked; // Karmaşıklık seçeneği
 
             for (let i = 0; i < numShapes; i++) {
                 const x = Math.random() * canvas.width;
@@ -90,6 +102,16 @@
                             ctx.stroke();
                         }
                         break;
+                }
+
+                if (complexityCheckbox) {
+                    const randX = Math.random() * canvas.width;
+                    const randY = Math.random() * canvas.height;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(randX, randY);
+                    ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.stroke();
                 }
             }
         }
