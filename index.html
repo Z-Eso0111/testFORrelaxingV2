@@ -1,113 +1,114 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hareketli Şekiller ve Çizgiler Animasyonu</title>
-    <style>
-        body {
-            background-color: #000;
-            margin: 0;
-            overflow: hidden;
-        }
-        #canvas {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basit 2D Silah Oyunu</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    #canvas {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <script>
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
+  <canvas id="canvas"></canvas>
+  <script>
+    // Oyun değişkenleri
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const karakter = {
+      x: 100,
+      y: 100,
+      hiz: 5,
+    };
+    const dusmanlar = [];
+    let level = 1;
 
-        // Topların ve şekillerin boyutlarını ve renklerini ayarlayın
-        const ballRadius = 10;
-        const shapeRadius = 50;
-        const ballColor = "#f00";
-        const shapeColor = "#0f0";
+    // Oyun fonksiyonları
+    function ciz() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Rastgele koordinatlar üretmek için bir fonksiyon
-        function getRandomCoord(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+      // Harita çizimi (level'a göre değişir)
+      switch (level) {
+        case 1:
+          // Level 1 haritası
+          ctx.fillStyle = "green";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          break;
+        case 2:
+          // Level 2 haritası
+          ctx.fillStyle = "blue";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          break;
+      }
+
+      // Karakter çizimi
+      ctx.fillStyle = "red";
+      ctx.fillRect(karakter.x, karakter.y, 50, 50);
+
+      // Düşman çizimi
+      dusmanlar.forEach((dusman) => {
+        ctx.fillStyle = "black";
+        ctx.fillRect(dusman.x, dusman.y, 50, 50);
+      });
+    }
+
+    function hareketKontrol(e) {
+      switch (e.keyCode) {
+        case 37: // Sol
+          karakter.x -= karakter.hiz;
+          break;
+        case 38: // Yukarı
+          karakter.y -= karakter.hiz;
+          break;
+        case 39: // Sağ
+          karakter.x += karakter.hiz;
+          break;
+        case 40: // Aşağı
+          karakter.y += karakter.hiz;
+          break;
+      }
+    }
+
+    function oyunDöngüsü() {
+      ciz();
+      requestAnimationFrame(oyunDöngüsü);
+    }
+
+    // Oyun başlatma
+    oyunDöngüsü();
+
+    // Event dinleyicileri
+    window.addEventListener("keydown", hareketKontrol);
+
+    // Düşman ekleme (süreli fonksiyon)
+    setInterval(() => {
+      dusmanlar.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+      });
+    }, 1000);
+
+    // Düşmanlarla çarpışma kontrolü
+    setInterval(() => {
+      dusmanlar.forEach((dusman, i) => {
+        if (
+          karakter.x > dusman.x &&
+          karakter.x < dusman.x + 50 &&
+          karakter.y > dusman.y &&
+          karakter.y < dusman.y + 50
+        ) {
+          // Çarpışma gerçekleşti!
+          // ... (oyun bitme, skor güncelleme vb. kodları buraya eklenir)
+          dusmanlar.splice(i, 1); // Düşmanı listeden sil
         }
-
-        // Topları ve şekilleri çizen bir fonksiyon
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Sol alt köşedeki topu çiz
-            ctx.beginPath();
-            ctx.arc(ballRadius, canvas.height - ballRadius, ballRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = ballColor;
-            ctx.fill();
-
-            // Rastgele yerlerde şekiller oluşturun
-            for (let i = 0; i < 10; i++) {
-                const x = getRandomCoord(0, canvas.width);
-                const y = getRandomCoord(0, canvas.height);
-
-                ctx.beginPath();
-                ctx.arc(x, y, shapeRadius, 0, 2 * Math.PI);
-                ctx.fillStyle = shapeColor;
-                ctx.fill();
-            }
-
-            // Şekiller arasındaki bağlantıları çizin
-            for (let i = 0; i < 10; i++) {
-                for (let j = 0; j < 10; j++) {
-                    if (i !== j) {
-                        const x1 = getRandomCoord(0, canvas.width);
-                        const y1 = getRandomCoord(0, canvas.height);
-                        const x2 = getRandomCoord(0, canvas.width);
-                        const y2 = getRandomCoord(0, canvas.height);
-
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.strokeStyle = "#ccc";
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // Fare tıklamasına yanıt verme
-            canvas.addEventListener("click", function(event) {
-                const mouseX = event.clientX;
-                const mouseY = event.clientY;
-
-                // Tıklanan noktaya yakın çizgileri bükün
-                for (let i = 0; i < 10; i++) {
-                    for (let j = 0; j < 10; j++) {
-                        if (i !== j) {
-                            const x1 = getRandomCoord(0, canvas.width);
-                            const y1 = getRandomCoord(0, canvas.height);
-                            const x2 = getRandomCoord(0, canvas.width);
-                            const y2 = getRandomCoord(0, canvas.height);
-
-                            const dx = mouseX - x1;
-                            const dy = mouseY - y1;
-                            const dist = Math.sqrt(dx * dx + dy * dy);
-
-                            if (dist < 100) {
-                                ctx.beginPath();
-                                ctx.moveTo(x1, y1);
-                                ctx.lineTo(x2, y2);
-                                ctx.strokeStyle = "#f00";
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                }
-
-                // 0.5 saniye sonra çizgileri eski haline getirin
-                setTimeout(function() {
-                    draw();
-                }, 500);
-            });
-        }
-
-        draw();
-    </script>
+      });
+    }, 100);
+  </script>
 </body>
+</html>
