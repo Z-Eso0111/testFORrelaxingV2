@@ -9,7 +9,9 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
-            overflow: hidden; /* Ekrana sığmasını sağla */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         #canvas {
             border: 1px solid black;
@@ -35,37 +37,36 @@
         <option value="solid">Dolu</option>
         <option value="empty">Boş</option>
     </select><br>
-    <input type="checkbox" id="complexity-checkbox">
-    <label for="complexity-checkbox">Karmaşıklık</label><br>
+    <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
     <button onclick="downloadImage()">Resmi İndir</button>
-
-    <a id="download-link" style="display: none;" download="space.jpg" href="space.jpg">space.jpg'yi indir</a>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const backgroundSound = new Audio('space.mp3');
-        backgroundSound.loop = true;
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const bgColor = document.getElementById('background-color').value;
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const complexity = document.getElementById('complexity').checked;
 
             if (bgColor === '#000000') {
-                backgroundSound.play();
+                const audio = new Audio('space.mp3');
+                audio.loop = true;
+                audio.play();
+            }
+
+            if (bgColor === '#000000') {
+                document.body.style.backgroundImage = 'url("space.jpg")';
             } else {
-                backgroundSound.pause();
-                backgroundSound.currentTime = 0;
+                document.body.style.backgroundImage = 'none';
+                document.body.style.backgroundColor = bgColor;
             }
 
             const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
             const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
             const shapeFill = document.getElementById('shape-fill').value; // Dolu veya boş şekiller
-            const complexityChecked = document.getElementById('complexity-checkbox').checked;
 
             for (let i = 0; i < numShapes; i++) {
                 const x = Math.random() * canvas.width;
@@ -74,6 +75,7 @@
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const shape = shapes[Math.floor(Math.random() * shapes.length)];
 
+                ctx.strokeStyle = color;
                 ctx.fillStyle = color;
 
                 switch (shape) {
@@ -107,21 +109,20 @@
                         break;
                 }
 
-                if (complexityChecked && i > 0) {
-                    const prevX = Math.random() * canvas.width;
-                    const prevY = Math.random() * canvas.height;
-                    const prevColor = colors[Math.floor(Math.random() * colors.length)];
-                    ctx.strokeStyle = prevColor;
+                if (complexity) {
                     ctx.beginPath();
-                    ctx.moveTo(prevX, prevY);
-                    ctx.lineTo(x, y);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
                     ctx.stroke();
                 }
             }
         }
 
         function downloadImage() {
-            document.getElementById('download-link').click();
+            const link = document.createElement('a');
+            link.download = 'random_image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         }
     </script>
 </body>
