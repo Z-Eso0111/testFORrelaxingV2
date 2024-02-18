@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[RMI] - Random Meaningless Image Generator</title>
+    <title>Rastgele Anlamsız Resim Oluşturucu</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,6 +22,16 @@
         label {
             margin-right: 10px;
         }
+        #stop-music {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body id="body">
@@ -36,6 +46,7 @@
     <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
     <button onclick="downloadImage()">Resmi İndir</button>
+    <button id="stop-music" onclick="stopMusic()">Müziği Durdur</button>
 
     <script>
         const canvas = document.getElementById('canvas');
@@ -44,6 +55,7 @@
         const backgroundCheckbox = document.getElementById('background-color');
         const complexityCheckbox = document.getElementById('complexity');
         let isMusicPlaying = false; // Müziğin çalınıp çalınmadığını kontrol et
+        let audio;
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -114,12 +126,11 @@
 
             // Arka plan rengi siyahsa ve müzik çalmıyorsa müziği başlat
             if (bgColor === '#000000' && !isMusicPlaying) {
-                const audio = new Audio('space.mp3');
+                audio = new Audio('space.mp3');
                 audio.loop = true;
                 audio.play();
                 isMusicPlaying = true;
             } else if (bgColor !== '#000000' && isMusicPlaying) { // Arka plan rengi siyah değilse ve müzik çalıyorsa müziği durdur
-                const audio = document.querySelector('audio');
                 if (audio && !audio.paused) {
                     audio.pause();
                     isMusicPlaying = false;
@@ -140,6 +151,13 @@
             link.download = 'random_image.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        }
+
+        function stopMusic() {
+            if (audio && !audio.paused) {
+                audio.pause();
+                isMusicPlaying = false;
+            }
         }
     </script>
 </body>
