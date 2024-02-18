@@ -1,91 +1,77 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Silahlı Oyun</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Rastgele Reisim Oluşturucu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="canvas" width="500" height="500"></canvas>
+    <div class="container">
+        <h1>Rastgele Reisim Oluşturucu</h1>
+        <button id="generateButton">Reisim Oluştur</button>
+        <p id="destination"></p>
+    </div>
 
     <script>
-        // Canvas ve bağlamın alınması
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Oyun karakteri ve silahın tanımlanması
-        const player = {
-            x: 100,
-            y: 100,
-            width: 32,
-            height: 32,
-            speed: 5,
-            direction: "right",
-            health: 100,
-        };
-
-        const gun = {
-            x: player.x + player.width / 2,
-            y: player.y + player.height / 2,
-            rotation: 0,
-            fireRate: 100, // Milisaniye cinsinden
-            lastFired: 0,
-        };
-
-        // Harita ve duvarların tanımlanması
-        const map = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        // Destinasyonlar
+        const destinasyonlar = [
+            "Paris, Fransa",
+            "Roma, İtalya",
+            "Londra, İngiltere",
+            "New York, ABD",
+            "Tokyo, Japonya",
+            "Rio de Janeiro, Brezilya",
+            "İstanbul, Türkiye",
+            "Barcelona, İspanya",
+            "Sidney, Avustralya",
+            "Dubai, Birleşik Arap Emirlikleri"
         ];
 
-        // Oyun döngüsü
-        function gameLoop() {
-            // Ekranın temizlenmesi
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Rastgele destinasyon oluşturma fonksiyonu
+        function rastgeleDestinasyon() {
+            return destinasyonlar[Math.floor(Math.random() * destinasyonlar.length)];
+        }
 
-            // Oyun karakterinin hareketinin kontrol edilmesi
-            if (player.direction === "right") {
-                player.x += player.speed;
-            } else if (player.direction === "left") {
-                player.x -= player.speed;
-            } else if (player.direction === "up") {
-                player.y -= player.speed;
-            } else if (player.direction === "down") {
-                player.y += player.speed;
-            }
-
-            // Duvarlarla çarpışmanın kontrol edilmesi
-            for (let i = 0; i < map.length; i++) {
-                for (let j = 0; j < map[i].length; j++) {
-                    if (map[i][j] === 1) {
-                        if (
-                            player.x > j * 32 &&
-                            player.x < (j + 1) * 32 &&
-                            player.y > i * 32 &&
-                            player.y < (i + 1) * 32
-                        ) {
-                            // Çarpışma gerçekleşti
-                        }
-                    }
-                }
-            }
-
-            // Oyun karakterinin çizilmesi
-            ctx.fillStyle = "red";
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-
-            // Silahlı animasyon ve ateşleme
-
-            // ...
-
-            // Haritanın çizilmesi
-            for (let i = 0;
+        // Butona tıklandığında yeni reisim oluştur
+        document.getElementById("generateButton").addEventListener("click", function() {
+            const destination = rastgeleDestinasyon();
+            document.getElementById("destination").textContent = `Gitmeniz gereken yer: ${destination}`;
+        });
+    </script>
+</body>
+</html>
