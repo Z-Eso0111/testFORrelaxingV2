@@ -3,20 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Silah Oyunu</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        #canvas {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
+    <title>2D Silahlı Oyun</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <script src="script.js"></script>
-</body>
-</html>
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+        // Canvas ve bağlamın alınması
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Oyun karakteri ve silahın tanımlanması
+        const player = {
+            x: 100,
+            y: 100,
+            width: 32,
+            height: 32,
+            speed: 5,
+            direction: "right",
+            health: 100,
+        };
+
+        const gun = {
+            x: player.x + player.width / 2,
+            y: player.y + player.height / 2,
+            rotation: 0,
+            fireRate: 100, // Milisaniye cinsinden
+            lastFired: 0,
+        };
+
+        // Harita ve duvarların tanımlanması
+        const map = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ];
+
+        // Oyun döngüsü
+        function gameLoop() {
+            // Ekranın temizlenmesi
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Oyun karakterinin hareketinin kontrol edilmesi
+            if (player.direction === "right") {
+                player.x += player.speed;
+            } else if (player.direction === "left") {
+                player.x -= player.speed;
+            } else if (player.direction === "up") {
+                player.y -= player.speed;
+            } else if (player.direction === "down") {
+                player.y += player.speed;
+            }
+
+            // Duvarlarla çarpışmanın kontrol edilmesi
+            for (let i = 0; i < map.length; i++) {
+                for (let j = 0; j < map[i].length; j++) {
+                    if (map[i][j] === 1) {
+                        if (
+                            player.x > j * 32 &&
+                            player.x < (j + 1) * 32 &&
+                            player.y > i * 32 &&
+                            player.y < (i + 1) * 32
+                        ) {
+                            // Çarpışma gerçekleşti
+                        }
+                    }
+                }
+            }
+
+            // Oyun karakterinin çizilmesi
+            ctx.fillStyle = "red";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Silahlı animasyon ve ateşleme
+
+            // ...
+
+            // Haritanın çizilmesi
+            for (let i = 0;
