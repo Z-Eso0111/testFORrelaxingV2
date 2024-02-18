@@ -8,10 +8,6 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
         }
         #canvas {
             border: 1px solid black;
@@ -28,10 +24,10 @@
         }
     </style>
 </head>
-<body>
+<body id="body">
     <canvas id="canvas" width="400" height="400"></canvas><br>
     <label for="background-color">Arka Plan Rengi:</label>
-    <input type="color" id="background-color" value="#f0f0f0"><br>
+    <input type="color" id="background-color" value="#ffffff"><br>
     <label for="shape-fill">Şekil Dolgusu:</label>
     <select id="shape-fill">
         <option value="solid">Dolu</option>
@@ -44,35 +40,36 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const body = document.getElementById('body');
+        const backgroundCheckbox = document.getElementById('background-color');
+        const complexityCheckbox = document.getElementById('complexity');
+        let isBlackBackground = false;
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const bgColor = document.getElementById('background-color').value;
-            const complexity = document.getElementById('complexity').checked;
 
-            if (bgColor === '#000000') {
-                const audio = new Audio('space.mp3');
-                audio.loop = true;
-                audio.play();
-                document.body.style.backgroundImage = 'url("space.jpg")';
-            } else {
-                document.body.style.backgroundImage = 'none';
-                document.body.style.backgroundColor = bgColor;
-            }
+            // Arka plan rengini ayarla
+            const bgColor = backgroundCheckbox.value;
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            isBlackBackground = bgColor === '#000000';
 
-            const numShapes = Math.floor(Math.random() * 10) + 5; // Rastgele 5 ila 15 arasında şekil oluştur
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Rastgele renkler
-            const shapes = ['circle', 'square', 'triangle']; // Rastgele şekiller
-            const shapeFill = document.getElementById('shape-fill').value; // Dolu veya boş şekiller
+            // Karmaşıklık seçeneğini kontrol et
+            const isComplex = complexityCheckbox.checked;
+
+            // Şekilleri çiz
+            const numShapes = Math.floor(Math.random() * 10) + 5;
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            const shapes = ['circle', 'square', 'triangle'];
+            const shapeFill = document.getElementById('shape-fill').value;
 
             for (let i = 0; i < numShapes; i++) {
                 const x = Math.random() * canvas.width;
                 const y = Math.random() * canvas.height;
-                const size = Math.random() * 50 + 20; // Rastgele 20 ila 70 arasında boyut
+                const size = Math.random() * 50 + 20;
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const shape = shapes[Math.floor(Math.random() * shapes.length)];
 
-                ctx.strokeStyle = color;
                 ctx.fillStyle = color;
 
                 switch (shape) {
@@ -106,12 +103,34 @@
                         break;
                 }
 
-                if (complexity) {
+                // Karmaşıklık seçeneği işaretlendiğinde çizgileri ekle
+                if (isComplex) {
+                    ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
                     ctx.beginPath();
                     ctx.moveTo(x, y);
                     ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
                     ctx.stroke();
                 }
+            }
+
+            // Arka plan rengi siyahsa space.mp3 oynat
+            if (isBlackBackground) {
+                const audio = new Audio('space.mp3');
+                audio.loop = true;
+                audio.play();
+            } else {
+                const audio = document.querySelector('audio');
+                if (audio) {
+                    audio.pause();
+                }
+            }
+
+            // Site arka planını ayarla
+            if (bgColor === '#000000') {
+                body.style.backgroundImage = "url('space.jpg')";
+                body.style.backgroundSize = "cover";
+            } else {
+                body.style.background = "#ffffff";
             }
         }
 
