@@ -11,9 +11,12 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background-image: url('space.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
         }
         #canvas {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -132,10 +135,6 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
-
-        window.addEventListener('resize', function() {
-            generateRandomImage();
-        });
     </script>
 </body>
 </html>
