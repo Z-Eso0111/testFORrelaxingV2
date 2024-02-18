@@ -35,7 +35,6 @@
     </select><br>
     <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
     <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
-    <button onclick="toggleMusic()">Müziği Aç/Kapat</button>
     <button onclick="downloadImage()">Resmi İndir</button>
 
     <script>
@@ -44,8 +43,7 @@
         const body = document.getElementById('body');
         const backgroundCheckbox = document.getElementById('background-color');
         const complexityCheckbox = document.getElementById('complexity');
-        let isBlackBackground = false;
-        let isMusicPlaying = false; // Müziğin çalınıp çalmadığını kontrol et
+        let isMusicPlaying = false; // Müziğin çalınıp çalınmadığını kontrol et
 
         function generateRandomImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -54,7 +52,6 @@
             const bgColor = backgroundCheckbox.value;
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            isBlackBackground = bgColor === '#000000';
 
             // Karmaşıklık seçeneğini kontrol et
             const isComplex = complexityCheckbox.checked;
@@ -116,41 +113,17 @@
             }
 
             // Arka plan rengi siyahsa ve müzik çalmıyorsa müziği başlat
-            if (isBlackBackground && !isMusicPlaying) {
+            if (bgColor === '#000000' && !isMusicPlaying) {
                 const audio = new Audio('space.mp3');
                 audio.loop = true;
                 audio.play();
                 isMusicPlaying = true;
-            } else if (!isBlackBackground && isMusicPlaying) { // Arka plan rengi siyah değilse ve müzik çalıyorsa müziği durdur
+            } else if (bgColor !== '#000000' && isMusicPlaying) { // Arka plan rengi siyah değilse ve müzik çalıyorsa müziği durdur
                 const audio = document.querySelector('audio');
                 if (audio) {
                     audio.pause();
                     isMusicPlaying = false;
                 }
-            }
-
-            // Site arka planını ayarla
-            if (bgColor === '#000000') {
-                body.style.backgroundImage = "url('space.jpg')";
-                body.style.backgroundSize = "cover";
-            } else {
-                body.style.background = "#ffffff";
-            }
-        }
-
-        // Müziği aç/kapat
-        function toggleMusic() {
-            if (isMusicPlaying) {
-                const audio = document.querySelector('audio');
-                if (audio) {
-                    audio.pause();
-                    isMusicPlaying = false;
-                }
-            } else {
-                const audio = new Audio('space.mp3');
-                audio.loop = true;
-                audio.play();
-                isMusicPlaying = true;
             }
         }
 
