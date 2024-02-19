@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rastgele Anlamsız Resim Oluşturucu</title>
+    <title>Random Meaningless Image Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,16 +36,16 @@
 </head>
 <body id="body">
     <canvas id="canvas" width="400" height="400"></canvas><br>
-    <label for="background-color">Arka Plan Rengi:</label>
+    <label for="background-color">Background Color:</label>
     <input type="color" id="background-color" value="#ffffff"><br>
-    <label for="shape-fill">Şekil Dolgusu:</label>
+    <label for="shape-fill">Shape Fill:</label>
     <select id="shape-fill">
-        <option value="solid">Dolu</option>
-        <option value="empty">Boş</option>
+        <option value="solid">solid</option>
+        <option value="empty">empty</option>
     </select><br>
     <input type="checkbox" id="complexity"> <label for="complexity">Karmaşıklık</label><br>
-    <button onclick="generateRandomImage()">Yeni Resim Oluştur</button>
-    <button onclick="downloadImage()">Resmi İndir</button>
+    <button onclick="generateRandomImage()">Generate New Image</button>
+    <button onclick="downloadImage()">Download Image</button>
     <button id="stop-music" onclick="stopMusic()">Müziği Durdur</button>
 
     <script>
@@ -165,7 +165,7 @@
             if (event.key === 'F10') {
                 const answer = prompt("--. .. --.. .-.. .. / -.- --- -.. / --. .. .-. .. -. .. --..");
                 if (answer === "%DEBUG%/MUSIC") {
-                    const redirect = confirm("Devam etmek istiyor musunuz?");
+                    const redirect = confirm("Do you want to continue?");
                     if (redirect) {
                         window.location.href = 'https://youtu.be/q4S82MSMaBI';
                     }
